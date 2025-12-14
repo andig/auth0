@@ -9,6 +9,8 @@ import (
 	"github.com/auth0/go-auth0/v2/authentication"
 	"github.com/auth0/go-auth0/v2/authentication/database"
 	"github.com/auth0/go-auth0/v2/authentication/oauth"
+	"github.com/auth0/go-auth0/v2/management"
+	"github.com/auth0/go-auth0/v2/management/option"
 	_ "github.com/joho/godotenv/autoload"
 	"golang.org/x/oauth2"
 )
@@ -63,4 +65,17 @@ func main() {
 	}
 
 	fmt.Println(tokenSet)
+
+	mgmt, err := management.New(
+		os.Getenv("AUTH0_DOMAIN"),
+		option.WithToken(os.Getenv("AUTH0_API_TOKEN")), // Replace with a Context that better suits your usage
+	)
+
+	request := &management.UpdateUserAttributeProfileRequestContent{}
+	mgmt.UserAttributeProfiles.Update(
+		context.TODO(),
+		"id",
+		request,
+	)
+
 }

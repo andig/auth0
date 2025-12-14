@@ -25,6 +25,15 @@ func New(auth *authenticator.Authenticator) *gin.Engine {
 	gob.Register(map[string]interface{}{})
 
 	store := cookie.NewStore([]byte("secret"))
+
+	store.Options(sessions.Options{
+		Path:     "/",   // Available across the entire domain
+		Domain:   "",    // Adjust to your domain, use an empty string for localhost or omit for default behavior
+		MaxAge:   3600,  // Expires in 1 hour
+		Secure:   false, // Set to true if serving over HTTPS, false otherwise
+		HttpOnly: true,  // Recommended: JavaScript can't access the cookie
+	})
+
 	router.Use(sessions.Sessions("auth-session", store))
 
 	router.Static("/public", "web/static")
